@@ -34,7 +34,7 @@ php artisan vendor:publish --tags=semaphore
 With that, you can use the `Semaphore` facade to send messages.
 
 ```php
-Semaphore::message()->send(');
+Semaphore::message()->send('0917xxxxxxx', 'Your OTP is X7542.');
 ```
 
 ## Notification Channel
