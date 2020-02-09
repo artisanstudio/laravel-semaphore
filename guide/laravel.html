@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Laravel Integration</title>
+    <meta name="description" content="">
+    <meta name="generator" content="VuePress 1.3.0">
+    
+    
+    <link rel="preload" href="/semaphore-php/assets/css/0.styles.83af8b61.css" as="style"><link rel="preload" href="/semaphore-php/assets/js/app.852b4b09.js" as="script"><link rel="preload" href="/semaphore-php/assets/js/2.ce795325.js" as="script"><link rel="preload" href="/semaphore-php/assets/js/5.97bab9ea.js" as="script"><link rel="prefetch" href="/semaphore-php/assets/js/3.e0d8faa7.js"><link rel="prefetch" href="/semaphore-php/assets/js/4.a66c8316.js"><link rel="prefetch" href="/semaphore-php/assets/js/6.cb57459c.js"><link rel="prefetch" href="/semaphore-php/assets/js/7.bfc7e9d6.js"><link rel="prefetch" href="/semaphore-php/assets/js/8.8c4ddf07.js">
+    <link rel="stylesheet" href="/semaphore-php/assets/css/0.styles.83af8b61.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/semaphore-php/" class="home-link router-link-active"></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <!----></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><!---->  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><a href="/semaphore-php/guide/" class="sidebar-heading clickable router-link-active open"><span>Guide</span> <!----></a> <ul class="sidebar-links sidebar-group-items"><li><a href="/semaphore-php/guide/" class="sidebar-link">Introduction</a></li><li><a href="/semaphore-php/guide/laravel.html" class="active sidebar-link">Laravel Integration</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/semaphore-php/guide/laravel.html#configuration" class="sidebar-link">Configuration</a></li><li class="sidebar-sub-header"><a href="/semaphore-php/guide/laravel.html#sending-messages-with-the-facade" class="sidebar-link">Sending Messages with the Facade</a></li><li class="sidebar-sub-header"><a href="/semaphore-php/guide/laravel.html#notification-channel" class="sidebar-link">Notification Channel</a></li></ul></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="laravel-integration"><a href="#laravel-integration" class="header-anchor">#</a> Laravel Integration</h1> <p>If you're using Laravel, there's already a built in integration to help out with the set up.</p> <p>For Laravel 5.5 or greater, the package already adds the service provider via <strong>Package Discovery</strong>.</p> <p>Otherwise, add the Semaphore service provider in your <code>config/app.php</code></p> <div class="language-php extra-class"><pre class="language-php"><code><span class="token keyword">return</span> <span class="token punctuation">[</span>
+    <span class="token single-quoted-string string">'providers'</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">[</span>
+        <span class="token comment">// ...</span>
+        Humans\<span class="token package">Semaphore<span class="token punctuation">\</span>ServiceProvider</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token keyword">class</span><span class="token punctuation">,</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token punctuation">]</span>
+</code></pre></div><h2 id="configuration"><a href="#configuration" class="header-anchor">#</a> Configuration</h2> <p>In your <code>.env</code> file, copy this default template and you can then add your Semaphore API key and sender name.</p> <div class="language- extra-class"><pre class="language-text"><code>SEMAPHORE_KEY=
+SEMAPHORE_FROM_NAME=
+</code></pre></div><p>If you want to customize the config file, publish the config file via:</p> <div class="language-bash extra-class"><pre class="language-bash"><code>php artisan vendor:publish --tags<span class="token operator">=</span>semaphore
+</code></pre></div><h2 id="sending-messages-with-the-facade"><a href="#sending-messages-with-the-facade" class="header-anchor">#</a> Sending Messages with the Facade</h2> <p>With that, you can use the <code>Semaphore</code> facade to send messages.</p> <div class="language-php extra-class"><pre class="language-php"><code>Semaphore<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">message</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">send</span><span class="token punctuation">(</span>'<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h2 id="notification-channel"><a href="#notification-channel" class="header-anchor">#</a> Notification Channel</h2> <p>After creating a notification, we can start using the <code>Humans\Semaphore\Laravel\SemaphoreChannel</code> to send out your SMS.</p> <p>You should define a <code>toSemaphore</code> method on the notification class. This method will receive a <code>$notifiable</code> entity and should return an <code>Humans\Semaphore\SemahporeMessage</code> instance:</p> <div class="language-php extra-class"><pre class="language-php"><code><span class="token keyword">use</span> <span class="token package">Humans<span class="token punctuation">\</span>Semaphore<span class="token punctuation">\</span>Laravel<span class="token punctuation">\</span>SemaphoreChannel</span><span class="token punctuation">;</span>
+<span class="token keyword">use</span> <span class="token package">Humans<span class="token punctuation">\</span>Semaphore<span class="token punctuation">\</span>Laravel<span class="token punctuation">\</span>SemaphoreMessage</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">ReminderMessage</span> <span class="token keyword">extends</span> <span class="token class-name">notification</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">via</span><span class="token punctuation">(</span><span class="token variable">$notifiable</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token single-quoted-string string">'slack'</span><span class="token punctuation">,</span> SemaphoreChannel<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token keyword">class</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">toSemaphore</span><span class="token punctuation">(</span><span class="token variable">$notifiable</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">SemaphoreMessage</span><span class="token punctuation">)</span>
+            <span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">message</span><span class="token punctuation">(</span><span class="token double-quoted-string string">&quot;Hey <span class="token interpolation"><span class="token punctuation">{</span><span class="token variable">$notifiable</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token property">name</span><span class="token punctuation">}</span></span>, don't forget to brush your teeth!&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>If you would like to send notifications form a sname that is different from the name you specified in your <code>config/semaphore.php</code> file, you may use the <code>from</code> method on a <code>SemaphoreMessage</code> instance:</p> <div class="language-php extra-class"><pre class="language-php"><code>    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">toSemaphore</span><span class="token punctuation">(</span><span class="token variable">$notifiable</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">SemaphoreMessage</span><span class="token punctuation">)</span>
+                    <span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">content</span><span class="token punctuation">(</span><span class="token double-quoted-string string">&quot;Hey <span class="token interpolation"><span class="token punctuation">{</span><span class="token variable">$notifiable</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token property">name</span><span class="token punctuation">}</span></span>, don't forget to brush your teeth!&quot;</span><span class="token punctuation">)</span>
+                    <span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'Humans'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+</code></pre></div><p>When sending notifications via the <code>SemaphoreChannel::class</code>, the notification system <em><em>won't</em></em> look for any atribute automatically on the notifiable entry. To assign which number the notification is delivered to, define a <code>routeNotificationForSemaphore</code> method on the entity:</p> <div class="language-php extra-class"><pre class="language-php"><code><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+
+<span class="token keyword">namespace</span> <span class="token package">App</span><span class="token punctuation">;</span>
+
+<span class="token keyword">use</span> <span class="token package">Illuminate<span class="token punctuation">\</span>Notifications<span class="token punctuation">\</span>Notifiable</span><span class="token punctuation">;</span>
+<span class="token keyword">use</span> <span class="token package">Illuminate<span class="token punctuation">\</span>Foundation<span class="token punctuation">\</span>Auth<span class="token punctuation">\</span>User</span> <span class="token keyword">as</span> Authenticatable<span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token keyword">extends</span> <span class="token class-name">Authenticatable</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">use</span> <span class="token package">Notifiable</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * Route notifications for the Semaphore channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return string
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">routeNotificationForSemaphore</span><span class="token punctuation">(</span><span class="token variable">$notification</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token variable">$this</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token property">mobile</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</span></code></pre></div></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/semaphore-php/guide/" class="prev router-link-active">
+        Introduction
+      </a></span> <!----></p></div> </main></div><div class="global-ui"></div></div>
+    <script src="/semaphore-php/assets/js/app.852b4b09.js" defer></script><script src="/semaphore-php/assets/js/2.ce795325.js" defer></script><script src="/semaphore-php/assets/js/5.97bab9ea.js" defer></script>
+  </body>
+</html>
